@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.19.0 -->
+<interface>
+  <requires lib="gtk+" version="3.16"/>
+  <object class="GtkMenu" id="menu">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkMenuItem" id="new_image">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">New image</property>
+        <property name="use_underline">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="delete_image">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Delete image</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_delete_image" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="update">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Update list</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_update_list" swapped="no"/>
+      </object>
+    </child>
+  </object>
+  <object class="GtkListStore" id="store">
+    <columns>
+      <!-- column-name id -->
+      <column type="gchararray"/>
+      <!-- column-name repository -->
+      <column type="gchararray"/>
+      <!-- column-name tag -->
+      <column type="gchararray"/>
+      <!-- column-name created -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkTreeView" id="view">
+    <property name="visible">True</property>
+    <property name="can_focus">True</property>
+    <property name="model">store</property>
+    <property name="expander_column">repository</property>
+    <property name="show_expanders">False</property>
+    <property name="enable_grid_lines">horizontal</property>
+    <signal name="button-press-event" handler="on_list_view_btn_press" swapped="no"/>
+    <child internal-child="selection">
+      <object class="GtkTreeSelection" id="treeview-selection1"/>
+    </child>
+    <child>
+      <object class="GtkTreeViewColumn" id="repository">
+        <property name="resizable">True</property>
+        <property name="title" translatable="yes">Repoitory</property>
+        <property name="expand">True</property>
+        <property name="sort_column_id">1</property>
+        <child>
+          <object class="GtkCellRendererText" id="cellrenderertext1"/>
+          <attributes>
+            <attribute name="text">1</attribute>
+          </attributes>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkTreeViewColumn" id="tag">
+        <property name="resizable">True</property>
+        <property name="title" translatable="yes">Tag</property>
+        <property name="sort_column_id">2</property>
+        <child>
+          <object class="GtkCellRendererText" id="cellrenderertext2"/>
+          <attributes>
+            <attribute name="text">2</attribute>
+          </attributes>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkTreeViewColumn" id="created">
+        <property name="resizable">True</property>
+        <property name="title" translatable="yes">Created</property>
+        <property name="sort_column_id">3</property>
+        <child>
+          <object class="GtkCellRendererText" id="cellrenderertext3"/>
+          <attributes>
+            <attribute name="text">3</attribute>
+          </attributes>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
