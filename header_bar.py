@@ -17,6 +17,18 @@ class HeaderBar(Gtk.HeaderBar):
         self.stack_switcher = Gtk.StackSwitcher()
         self.set_custom_title(self.stack_switcher)
 
+        # кнопка процесу
+        self.btn_background = Gtk.Button()
+        self.btn_background.add(Gtk.Spinner(active=True))
+        self.pack_end(self.btn_background)
+        self.btn_background_popover_label = Gtk.Label('Background task')
+        self.btn_background_popover = Gtk.Popover()
+        self.btn_background_popover.set_border_width(10)
+        self.btn_background_popover.set_relative_to(self.btn_background)
+        self.btn_background_popover.add(self.btn_background_popover_label)
+        self.btn_background.connect('clicked', self.on_background_btn_clicked)
+
+
         # кнопка оновити
         btn_update = Gtk.Button(image=Gtk.Image(stock=Gtk.STOCK_REFRESH))
         self.pack_end(btn_update)
@@ -24,3 +36,6 @@ class HeaderBar(Gtk.HeaderBar):
         # кнопка додати
         btn_add = Gtk.Button(image=Gtk.Image(stock=Gtk.STOCK_ADD))
         self.pack_end(btn_add)
+
+    def on_background_btn_clicked(self, event):
+        self.btn_background_popover.show_all()
