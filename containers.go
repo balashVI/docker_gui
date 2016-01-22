@@ -74,6 +74,18 @@ func (self *Containers) Inspect(container_id string) *ContainerInfo {
 		}
 		res.Mounts.Add(mounts)
 
+		// ports
+		ports := []PortBinding{}
+		for key, value := range container.HostConfig.PortBindings {
+			for i, _ := range value {
+				ports = append(ports, PortBinding{
+					ContainerPort: string(key),
+					HostPort:      string(value[i].HostPort),
+				})
+			}
+		}
+		res.Ports.Add(ports)
+
 		self.catch[container_id] = res
 	}
 

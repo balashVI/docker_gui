@@ -50,8 +50,6 @@ Column {
     Repeater{
         id: rows
 
-        onModelChanged: console.log(model)
-
         delegate: Row{
             id: row
             property int number: modelData

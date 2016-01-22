@@ -11,22 +11,23 @@ type ContainerInfo struct {
 	Image   string
 	Created string
 	Running bool
-	Env     EnvironmentVariableList
+	Env     EnvironmentVariablesList
 	Mounts  MountsList
+	Ports   PortBindingsList
 }
 
-type EnvironmentVariableList struct {
+type EnvironmentVariablesList struct {
 	list []EnvironmentVariable
 	Len  int
 }
 
-func (self *EnvironmentVariableList) Add(env []EnvironmentVariable) {
+func (self *EnvironmentVariablesList) Add(env []EnvironmentVariable) {
 	self.list = append(self.list, env...)
 	self.Len = len(self.list)
 	qml.Changed(self, &self.Len)
 }
 
-func (self *EnvironmentVariableList) Get(position int) *EnvironmentVariable {
+func (self *EnvironmentVariablesList) Get(position int) *EnvironmentVariable {
 	if position >= self.Len {
 		fmt.Println("errrrr", position, self.Len)
 	}
@@ -55,5 +56,25 @@ func (self *MountsList) Add(env []Mounts) {
 }
 
 func (self *MountsList) Get(position int) *Mounts {
+	return &self.list[position]
+}
+
+type PortBinding struct {
+	ContainerPort string
+	HostPort      string
+}
+
+type PortBindingsList struct {
+	list []PortBinding
+	Len  int
+}
+
+func (self *PortBindingsList) Add(ports []PortBinding) {
+	self.list = append(self.list, ports...)
+	self.Len = len(self.list)
+	qml.Changed(self, &self.Len)
+}
+
+func (self *PortBindingsList) Get(position int) *PortBinding {
 	return &self.list[position]
 }

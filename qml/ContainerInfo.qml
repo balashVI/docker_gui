@@ -15,7 +15,7 @@ Item {
     Flickable {
         id: flickable
         anchors.fill: parent
-        contentHeight: column.height+2*column.margings
+        contentHeight: column.height + 2 * column.margings
         contentWidth: width
         interactive: contentHeight > height
         clip: true
@@ -69,7 +69,7 @@ Item {
                 elide: Text.ElideRight
             }
 
-            ListItem.SectionHeader {
+            ModdedSectionHeader {
                 id: env_header
                 text: qsTr("Environment variables")
             }
@@ -88,26 +88,27 @@ Item {
                 source: container.env
             }
 
-            ListItem.SectionHeader {
+            ModdedSectionHeader {
                 id: ports_header
                 text: qsTr("Ports")
             }
-//            Table {
-//                visible: ports_header.expanded
-//                width: parent.width
-//                columns: [{
-//                        title: "Key",
-//                        role: "key",
-//                        width: 1
-//                    }, {
-//                        title: "Value",
-//                        role: "value",
-//                        width: 2
-//                    }]
-//                source: container.env
-//            }
 
-            ListItem.SectionHeader {
+            Table {
+                visible: ports_header.expanded
+                width: parent.width
+                columns: [{
+                        title: "Container",
+                        role: "containerPort",
+                        width: 1
+                    }, {
+                        title: "Host",
+                        role: "hostPort",
+                        width: 2
+                    }]
+                source: container.ports
+            }
+
+            ModdedSectionHeader {
                 id: mounts_header
                 text: qsTr("Mounts")
             }
