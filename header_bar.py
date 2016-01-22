@@ -9,9 +9,9 @@ class HeaderBar(Gtk.HeaderBar):
         self.set_show_close_button(True)
 
         # кнопка назад
-        self.btn_back = Gtk.Button(image=Gtk.Image(stock=Gtk.STOCK_GO_BACK))
-        self.btn_back.set_sensitive(False)
-        self.pack_start(self.btn_back)
+        self.btn_go_back = Gtk.Button(image=Gtk.Image(stock=Gtk.STOCK_GO_BACK))
+        self.btn_go_back.set_sensitive(False)
+        self.pack_start(self.btn_go_back)
 
         # кнопки перемикання сторінок Gtk.Stack
         self.stack_switcher = Gtk.StackSwitcher()
@@ -27,7 +27,6 @@ class HeaderBar(Gtk.HeaderBar):
         self.btn_background_popover.set_relative_to(self.btn_background)
         self.btn_background_popover.add(self.btn_background_popover_label)
         self.btn_background.connect('clicked', self.on_background_btn_clicked)
-
 
         # кнопка оновити
         btn_update = Gtk.Button(image=Gtk.Image(stock=Gtk.STOCK_REFRESH))

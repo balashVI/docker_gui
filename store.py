@@ -12,7 +12,7 @@ class _Store(GObject.GObject):
         self.images_store = Gtk.ListStore(str, str, str, str)
         self.update_images_store()
 
-        self.containers_store = Gtk.ListStore(str, str, str)
+        self.containers_store = Gtk.ListStore(str, str, str, str)
         self.update_containers_store()
 
         # списки та контейнери що в процесі видалення
@@ -34,7 +34,7 @@ class _Store(GObject.GObject):
         for container in containers:
             # print(container)
             status = container['Status'].split()[0]
-            self.containers_store.append([status, container['Names'][0], container['Image']])
+            self.containers_store.append([container['Id'], status, container['Names'][0], container['Image']])
 
     def add_delete_image_task(self, image_id):
         # перевірка чи зображення вже видаляється
@@ -71,6 +71,8 @@ class _Store(GObject.GObject):
     def download_image_finish(self, image_id):
         pass
 
+    def get_container_info(self, container_id):
+        return cli.inspect_container(container_id)
 
 # pseudo singleton
 store = _Store()
