@@ -22,16 +22,28 @@ func checkErrors(err error) {
 func run() error {
 	dockerClient, err := docker.NewClient("unix:///var/run/docker.sock")
 	checkErrors(err)
+
+	var eventsMonitor EventsMonitor
+	go eventsMonitor.Run(dockerClient)
+
 	qml.RegisterTypes("DockerGUI", 1, 0, []qml.TypeSpec{
 		{
 			Init: func(v *Containers, obj qml.Object) {
 				v.Init(dockerClient)
+				eventsMonitor.containers = v
 			},
 			Singleton: true,
 		},
 		{
 			Init: func(v *Images, obj qml.Object) {
 				v.Init(dockerClient)
+				eventsMonitor.images = v
+			},
+			Singleton: true,
+		},
+		{
+			Init: func(v *TasksRunner, obj qml.Object) {
+				v.Init("unix:///var/run/docker.sock")
 			},
 			Singleton: true,
 		},

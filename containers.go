@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/fsouza/go-dockerclient"
+	"gopkg.in/qml.v1"
 	"strings"
 )
 
@@ -41,9 +42,13 @@ func (self *Containers) UpdateList() {
 
 	self.List.Clear()
 	self.List.Add(containers)
+	qml.Changed(&self.List, &self.List.Len)
 }
 
 func (self *Containers) Inspect(container_id string) *ContainerInfo {
+	if container_id == "" {
+		return nil
+	}
 	res, ok := self.catch[container_id]
 	if !ok {
 		container, err := self.dockerClient.InspectContainer(container_id)
@@ -90,4 +95,39 @@ func (self *Containers) Inspect(container_id string) *ContainerInfo {
 	}
 
 	return res
+}
+
+func (self *Containers) OnContainerDied(id string) {
+	if container, ok := self.catch[id]; ok {
+		container.Running = false
+		qml.Changed(container, &container.Running)
+	}
+
+	for i, _ := range self.List.list {
+		if self.List.list[i].Id == id {
+			self.List.list[i].IsRunning = false
+			qml.Changed(&self.List.list[i], &self.List.list[i].IsRunning)
+			break
+		}
+	}
+}
+
+func (self *Containers) OnContainerStarted(id string) {
+	if container, ok := self.catch[id]; ok {
+		container.Running = true
+		qml.Changed(container, &container.Running)
+	}
+
+	for i, _ := range self.List.list {
+		if self.List.list[i].Id == id {
+			self.List.list[i].IsRunning = true
+			qml.Changed(&self.List.list[i], &self.List.list[i].IsRunning)
+			break
+		}
+	}
+}
+
+func (self *Containers) OnContainerDestroyed(id string) {
+	delete(self.catch, id)
+	self.UpdateList()
 }

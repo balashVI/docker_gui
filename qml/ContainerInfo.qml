@@ -9,7 +9,7 @@ import DockerGUI 1.0 as Docker
 
 Item {
     id: containerInfo
-    property string containerID
+    property string containerID: null
     property var container: Docker.Containers.inspect(containerID)
 
     Flickable {
@@ -42,10 +42,12 @@ Item {
                 IconButton {
                     iconName: "av/play_arrow"
                     visible: !container.running
+                    onClicked: Docker.TasksRunner.startContainer(container.id)
                 }
                 IconButton {
                     iconName: "av/stop"
                     visible: container.running
+                    onClicked: Docker.TasksRunner.stopContainer(container.id)
                 }
                 IconButton {
                     iconName: "av/replay"
@@ -54,6 +56,7 @@ Item {
                 IconButton {
                     iconName: "action/delete"
                     color: Palette.colors["red"][400]
+                    onClicked: Docker.TasksRunner.deleteContainer(container.id)
                 }
             }
             Label {
