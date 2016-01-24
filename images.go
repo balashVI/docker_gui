@@ -5,15 +5,17 @@ import (
 	"strings"
 )
 
+func NewImages(dockerClient *docker.Client) *Images {
+	images := &Images{
+		dockerClient: dockerClient,
+	}
+	images.UpdateList()
+	return images
+}
+
 type Images struct {
 	dockerClient *docker.Client
 	List         ImagesList
-}
-
-func (self *Images) Init(dockerClient *docker.Client) {
-	self.dockerClient = dockerClient
-
-	self.UpdateList()
 }
 
 func (self *Images) UpdateList() {

@@ -2,8 +2,6 @@ import QtQuick 2.5
 import Material 0.2
 import Material.ListItems 0.1 as ListItem
 
-import DockerGUI 1.0 as Docker
-
 Item {
     id: images
 
@@ -13,9 +11,9 @@ Item {
         Column {
             width: parent.width
             Repeater {
-                model: Docker.Images.list.len
+                model: DockerImages.list.len
                 delegate: ListItem.Subtitled {
-                    property var data: Docker.Images.list.get(modelData)
+                    property var data: DockerImages.list.get(modelData)
                     text: data.name
                     subText: data.tag
 

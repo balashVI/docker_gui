@@ -16,6 +16,12 @@ ApplicationWindow {
 
         actions: [
             Action {
+                iconName: "awesome/tasks"
+                name: "Background tasks"
+                hoverAnimation: true
+                onTriggered: bottomSheet.open()
+            },
+            Action {
                 iconName: "action/settings"
                 name: "Settings"
                 hoverAnimation: true
@@ -43,6 +49,26 @@ ApplicationWindow {
 
             Projects{
                 anchors.fill: parent
+            }
+        }
+    }
+    Snackbar{
+        id: snackbar
+        Timer{
+            property string lastEvent: DockerEvents.lastEvent
+            property var eventsList: []
+            onLastEventChanged: {
+                eventsList.unshift(lastEvent);
+                running = true
+            }
+            interval: 2000
+            triggeredOnStart: true
+            onTriggered: {
+                var event = eventsList.pop();
+                if (event)
+                    snackbar.open(event);
+                if(eventsList.length > 0)
+                    running = true;
             }
         }
     }

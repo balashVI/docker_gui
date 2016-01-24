@@ -1,30 +1,34 @@
 package main
 
-import "github.com/fsouza/go-dockerclient"
+import (
+	"github.com/fsouza/go-dockerclient"
+)
+
+func NewTasksRunner(dockerEndpoint string) *TasksRunner {
+	dockerClient, err := docker.NewClient(dockerEndpoint)
+	checkErrors(err)
+	tasksRunner := &TasksRunner{
+		dockerClient: dockerClient,
+	}
+	return tasksRunner
+}
 
 type TasksRunner struct {
 	dockerClient *docker.Client
 	timeout      uint
 }
 
-func (self *TasksRunner) Init(endpoint string) {
-	var err error
-	self.dockerClient, err = docker.NewClient(endpoint)
-	checkErrors(err)
-
-	// time for wait before killing container
-	self.timeout = 60
-}
-
 func (self *TasksRunner) StartContainer(id string) {
 	go func() {
-		self.dockerClient.StartContainer(id, &docker.HostConfig{})
+		err := self.dockerClient.StartContainer(id, &docker.HostConfig{})
+		checkErrors(err)
 	}()
 }
 
 func (self *TasksRunner) StopContainer(id string) {
 	go func() {
-		self.dockerClient.StopContainer(id, self.timeout)
+		err := self.dockerClient.StopContainer(id, self.timeout)
+		checkErrors(err)
 	}()
 }
 

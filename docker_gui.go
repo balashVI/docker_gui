@@ -23,39 +23,27 @@ func run() error {
 	dockerClient, err := docker.NewClient("unix:///var/run/docker.sock")
 	checkErrors(err)
 
-	var eventsMonitor EventsMonitor
-	go eventsMonitor.Run(dockerClient)
-
-	qml.RegisterTypes("DockerGUI", 1, 0, []qml.TypeSpec{
-		{
-			Init: func(v *Containers, obj qml.Object) {
-				v.Init(dockerClient)
-				eventsMonitor.containers = v
-			},
-			Singleton: true,
-		},
-		{
-			Init: func(v *Images, obj qml.Object) {
-				v.Init(dockerClient)
-				eventsMonitor.images = v
-			},
-			Singleton: true,
-		},
-		{
-			Init: func(v *TasksRunner, obj qml.Object) {
-				v.Init("unix:///var/run/docker.sock")
-			},
-			Singleton: true,
-		},
-	})
-
 	engine := qml.NewEngine()
 
+	// configuring context
+	images := NewImages(dockerClient)
+	engine.Context().SetVar("DockerImages", images)
+
+	containers := NewContainers(dockerClient)
+	engine.Context().SetVar("DockerContainers", containers)
+
+	tasks := NewTasksRunner("unix:///var/run/docker.sock")
+	engine.Context().SetVar("DockerTasks", tasks)
+
+	eventsMonitor := NewEventsMonitor(dockerClient, containers, images)
+	go eventsMonitor.Run()
+	engine.Context().SetVar("DockerEvents", eventsMonitor)
+
+	// creating window
 	controls, err := engine.LoadFile("./qml/main_window.qml")
 	if err != nil {
 		return err
 	}
-
 	window := controls.CreateWindow(nil)
 
 	window.Show()
