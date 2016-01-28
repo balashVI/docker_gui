@@ -26,10 +26,10 @@ func run() error {
 	engine := qml.NewEngine()
 
 	// configuring context
-	images := NewImages(dockerClient)
+	images := NewDockerImages(dockerClient)
 	engine.Context().SetVar("DockerImages", images)
 
-	containers := NewContainers(dockerClient)
+	containers := NewDockerContainers(dockerClient)
 	engine.Context().SetVar("DockerContainers", containers)
 
 	tasks := NewTasksRunner("unix:///var/run/docker.sock")

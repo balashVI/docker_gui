@@ -8,8 +8,7 @@ import Material.ListItems 0.1 as ListItem
 Item {
     id: containerInfo
     property string containerID: null
-    property var container: DockerContainers.inspect(containerID)
-    onContainerChanged: logs.refresh()
+    property var container: DockerContainers.get(containerID)
 
     Flickable {
         id: flickable
@@ -18,7 +17,7 @@ Item {
         contentWidth: width
         interactive: contentHeight > height
         clip: true
-
+        boundsBehavior: Flickable.StopAtBounds
         Column {
             id: column
             property int margings: Units.dp(16)
@@ -30,6 +29,7 @@ Item {
             }
             spacing: Units.dp(10)
 
+            // title and actions
             RowLayout {
                 width: parent.width
                 spacing: Units.dp(10)
@@ -50,7 +50,6 @@ Item {
                 }
                 IconButton {
                     visible: container.status === "running"
-                    hoverAnimation: true
                     action: Action {
                         name: qsTr("Stop container")
                         iconName: "av/stop"
@@ -59,7 +58,6 @@ Item {
                 }
                 IconButton {
                     visible: container.status === "running"
-                    hoverAnimation: true
                     action: Action {
                         name: qsTr("Restart container")
                         iconName: "av/replay"
@@ -67,7 +65,7 @@ Item {
                 }
                 IconButton {
                     action: Action {
-                        name: qsTr("Delete container")
+                        name: qsTr("Destroy container")
                         iconName: "action/delete"
                     }
                     visible: container.status !== "destroying"
@@ -78,6 +76,8 @@ Item {
                     }
                 }
             }
+
+            // base info section
             GridLayout {
                 rowSpacing: Units.dp(10)
                 columnSpacing: Units.dp(10)
@@ -111,56 +111,21 @@ Item {
                 }
             }
 
+            // logs section
             ModdedSectionHeader {
                 id: logs_header
                 expanded: true
                 text: qsTr("Logs")
             }
-            Rectangle {
+            Logs {
+                id: logs
                 visible: logs_header.expanded
                 width: parent.width
                 height: width / 2
-                color: Qt.darker(Theme.primaryColor)
-                Flickable {
-                    id: logs_flickable
-                    anchors {
-                        fill: parent
-                        margins: Units.dp(5)
-                    }
-                    clip: true
-                    contentHeight: logs.height
-                    contentWidth: width
-                    Label {
-                        id: logs
-                        color: "white"
-                        function refresh(){
-                            log_timer.restart();
-                            text = container.getLogs(true);
-                            logs_flickable.contentY = logs_flickable.contentHeight-logs_flickable.height;
-                        }
-
-                        Timer {
-                            id: log_timer
-                            running: logs_header.expanded
-                            repeat: true
-                            interval: 5000
-                            onTriggered: {
-                                var log = container.getLogs(false);
-                                if (log!==""){
-                                    parent.text += log;
-                                    logs_flickable.contentY = logs_flickable.contentHeight-logs_flickable.height;
-                                }
-                            }
-                        }
-                    }
-                }
-                ModdedScrollbar {
-                    flickableItem: logs_flickable
-                    color: "white"
-                    scrollBarOpacity: 0.5
-                }
+                getLogs: container.getLogs
             }
 
+            // environment variables section
             ModdedSectionHeader {
                 id: env_header
                 text: qsTr("Environment variables")
@@ -180,6 +145,7 @@ Item {
                 source: container.env
             }
 
+            // ports section
             ModdedSectionHeader {
                 id: ports_header
                 text: qsTr("Ports")
@@ -200,6 +166,7 @@ Item {
                 source: container.ports
             }
 
+            // mounts section
             ModdedSectionHeader {
                 id: mounts_header
                 text: qsTr("Mounts")

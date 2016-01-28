@@ -6,7 +6,7 @@ import (
 	"gopkg.in/qml.v1"
 )
 
-func NewEventsMonitor(dockerClient *docker.Client, containers *DockerContainers, images *Images) *EventsMonitor {
+func NewEventsMonitor(dockerClient *docker.Client, containers *DockerContainers, images *DockerImages) *EventsMonitor {
 	eventsMonitor := &EventsMonitor{
 		dockerClient: dockerClient,
 		containers:   containers,
@@ -19,7 +19,7 @@ type EventsMonitor struct {
 	dockerClient *docker.Client
 
 	containers *DockerContainers
-	images     *Images
+	images     *DockerImages
 
 	LastEvent string
 }

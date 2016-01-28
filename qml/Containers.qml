@@ -11,6 +11,7 @@ Item {
 
     Sidebar {
         id: sidebar
+
         Column {
             width: parent.width
             Repeater {
@@ -51,7 +52,6 @@ Item {
     }
 
     ContainerInfo{
-        id: container_info
         anchors {
             top: parent.top
             right: parent.right

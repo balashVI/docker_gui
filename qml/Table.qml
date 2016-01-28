@@ -18,6 +18,7 @@ Column {
             return res;
     }
 
+    // заголовки
     Row {
         Repeater {
             model: columns

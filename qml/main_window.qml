@@ -13,7 +13,6 @@ ApplicationWindow {
 
     initialPage: TabbedPage{
         title: "Docker GUI"
-
         actions: [
             Action {
                 iconName: "awesome/tasks"
@@ -30,7 +29,6 @@ ApplicationWindow {
 
         Tab{
             title: "Images"
-
             Images{
                 anchors.fill: parent
             }
@@ -38,7 +36,6 @@ ApplicationWindow {
 
         Tab{
             title: "Containers"
-
             Containers{
                 anchors.fill: parent
             }
@@ -46,7 +43,6 @@ ApplicationWindow {
 
         Tab{
             title: "Projects"
-
             Projects{
                 anchors.fill: parent
             }
